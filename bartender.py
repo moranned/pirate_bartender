@@ -41,9 +41,15 @@ def make_drink(prefs):
       order_ingredients.append(random.choice(ingredients.get(k)))
   return order_ingredients
 
+def name_drink():
+  nouns = ["Dog", "Seagull", "Pirate", "Cannonball", "Scallywag", "Anchor", "Diamond", "Breeze", "Sunshine", "Paradise", "Cocktail"]
+  adjectives = ["Rusty", "Dirty", "Black", "Pink", "Salty", "Fruity", "Fluffy", "Flaming", "Royal", "Happy"]
+  name = '%s %s' %(random.choice(adjectives),random.choice(nouns))
+  return name
+
 def main():
   customer_order = make_drink(get_preferences())
-  print '\nYour drink has the following ingredients:\n',
+  print '\nYour drink is ready.\nIt is called The %s.\nIt has some good stuff:\n' %name_drink()
   for i in customer_order:
      print 'a %s ' %i
   
