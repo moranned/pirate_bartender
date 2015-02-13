@@ -49,9 +49,9 @@ def name_drink():
 
 def main():
   customer_order = make_drink(get_preferences())
-  print '\nYour drink is ready.\nIt is called The %s.\nIt has some good stuff:\n' %name_drink()
+  print '\nYour drink is ready.\nIt is called The %s.\nIt has some good stuff:' %name_drink()
   for i in customer_order:
-     print 'a %s ' %i
+     print '> a %s ' %i
   
 if __name__ == '__main__':
   main()
