@@ -48,10 +48,15 @@ def name_drink():
   return name
 
 def main():
+  orders = 0
   drinks = True
   while drinks:
-    answer = raw_input('Would you like to order a drink, matey? ')
+    if orders == 0:
+      answer = raw_input('Would you like to order a drink, matey? ')
+    else:
+      answer = raw_input('Would you like to order another drink, matey? ')
     if answer.lower() == 'yes' or answer.lower() == 'y':
+      orders += 1
       customer_order = make_drink(get_preferences())
       print '\nYour drink is ready.\nIt is called The %s.\nIt has some good stuff:' %name_drink()
       for i in customer_order:
