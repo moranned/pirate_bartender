@@ -14,7 +14,7 @@ def get_preferences():
     "sweet": "Would ye like a bit of sweetness with yer poison? ",
     "fruity": "Are ye one for a fruity finish? "
   } 
-  for k,v in questions.items():
+  for k,v in questions.iteritems():
     answer = raw_input(v)
     if answer.lower() == 'yes' or answer.lower() == 'yes':
       customer_preferences[k] = True
@@ -36,7 +36,7 @@ def make_drink(prefs):
     "fruity": ["slice of orange", "dash of cassis", "cherry on top"]
   }
   order_ingredients = []
-  for k,v in prefs.items():
+  for k,v in prefs.iteritems():
     if v is True:
       order_ingredients.append(random.choice(ingredients.get(k)))
   return order_ingredients
@@ -46,7 +46,6 @@ def main():
   print '\nYour drink has the following ingredients:\n',
   for i in customer_order:
      print 'a %s ' %i
-  
   
 if __name__ == '__main__':
   main()
