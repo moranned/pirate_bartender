@@ -53,8 +53,11 @@ def main():
   while drinks:
     if orders == 0:
       answer = raw_input('Would you like to order a drink, matey? ')
-    else:
+    elif orders > 0 and orders < 6:
       answer = raw_input('Would you like to order another drink, matey? ')
+    else:
+      print 'Youre cutt off my friend. How about a glass of water?'
+      break
     if answer.lower() == 'yes' or answer.lower() == 'y':
       orders += 1
       customer_order = make_drink(get_preferences())
