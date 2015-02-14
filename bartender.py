@@ -20,7 +20,7 @@ def get_preferences():
       customer_preferences[k] = True
     else:
       customer_preferences[k] = False
-  return customer_preferences   
+  return customer_preferences 
 
 def make_drink(prefs):
   '''
@@ -52,11 +52,14 @@ def main():
   drinks = True
   while drinks:
     if orders == 0:
-      answer = raw_input('Would you like to order a drink, matey? ')
+      customer_name = raw_input('Ahoy matey, what is yer name? ')
+      question = 'Would you like to order a drink %s ? ' %customer_name
+      answer = raw_input(question)
     elif orders > 0 and orders < 6:
-      answer = raw_input('Would you like to order another drink, matey? ')
+      question = 'Would you like to order another drink, %s ? ' %customer_name
+      answer = raw_input(question)
     else:
-      print 'Youre cutt off my friend. How about a glass of water?'
+      print 'Youre cut off my friend. How about a glass of water?'
       break
     if answer.lower() == 'yes' or answer.lower() == 'y':
       orders += 1
