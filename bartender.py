@@ -52,7 +52,7 @@ def name_drink():
 def customer_management():
   '''
   greet customer and store name and number of drinks in global dictionary
-  @return boolean
+  @return string of customers name
   '''
   customers = {}
   question = 'Would you like to order a drink? '
@@ -78,12 +78,26 @@ def main():
     if customer_name:
       update_customer = ALL_CUSTOMERS.get(customer_name)
       if update_customer.get("drink name"):
-        print 'Would you like another %s? ' %update_customer["drink name"]
+        question = 'Would you like another %s ? ' %update_customer["drink name"]
+        answer = raw_input(question)
+        if answer.lower() == 'yes' or answer.lower() == 'y':
+          print 'One %s, coming right up' %update_customer["drink name"]
+        else:
+          customer_order = make_drink(get_preferences())
+          drink_name = name_drink()
+          update_customer["drink name"] = drink_name
+          update_customer["ingredients"] = customer_order
+          print 'I made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
+          for ingredients in customer_order:
+            print 'A %s' %ingredients
       else:
         customer_order = make_drink(get_preferences())
-        update_customer["drink name"] = name_drink()
+        drink_name = name_drink()
+        update_customer["drink name"] = drink_name
         update_customer["ingredients"] = customer_order
-        print ALL_CUSTOMERS
+        print 'I made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
+        for ingredients in customer_order:
+          print 'A %s' %ingredients
     else:
       drinks = False
   
