@@ -1,6 +1,7 @@
 import random
 
 ALL_CUSTOMERS = {}
+ANSWERS = ['yes','y']
 
 def get_preferences():
   '''
@@ -18,7 +19,7 @@ def get_preferences():
   } 
   for k,v in questions.iteritems():
     answer = raw_input(v)
-    if answer.lower() == 'yes' or answer.lower() == 'yes':
+    if answer.lower() in ANSWERS:
       customer_preferences[k] = True
     else:
       customer_preferences[k] = False
@@ -57,7 +58,7 @@ def customer_management():
   customers = {}
   question = 'Would you like to order a drink? '
   answer = raw_input(question)
-  if answer.lower() == 'yes' or answer.lower() == 'y':
+  if answer.lower() in ANSWERS:
     customer_name = raw_input('What is your name, matey? ')
     for customer, info in ALL_CUSTOMERS.iteritems():
       if customer == customer_name:
@@ -71,6 +72,20 @@ def customer_management():
   else:
     return None
 
+def deliver_drink(customer_info):
+  '''
+  update customers drink preferences and deliver drink
+  :param dictionary of customer_info:
+  :return:
+  '''
+  customer_order = make_drink(get_preferences())
+  drink_name = name_drink()
+  customer_info["drink name"] = drink_name
+  customer_info["ingredients"] = customer_order
+  print 'I made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
+  for ingredients in customer_order:
+    print 'A %s' %ingredients
+
 def main():
   drinks = True
   while drinks:
@@ -80,24 +95,12 @@ def main():
       if update_customer.get("drink name"):
         question = 'Would you like another %s ? ' %update_customer["drink name"]
         answer = raw_input(question)
-        if answer.lower() == 'yes' or answer.lower() == 'y':
-          print 'One %s, coming right up' %update_customer["drink name"]
+        if answer.lower() in ANSWERS:
+          print 'One %s, coming right up!' %update_customer["drink name"]
         else:
-          customer_order = make_drink(get_preferences())
-          drink_name = name_drink()
-          update_customer["drink name"] = drink_name
-          update_customer["ingredients"] = customer_order
-          print 'I made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
-          for ingredients in customer_order:
-            print 'A %s' %ingredients
+          deliver_drink(update_customer)
       else:
-        customer_order = make_drink(get_preferences())
-        drink_name = name_drink()
-        update_customer["drink name"] = drink_name
-        update_customer["ingredients"] = customer_order
-        print 'I made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
-        for ingredients in customer_order:
-          print 'A %s' %ingredients
+        deliver_drink(update_customer)
     else:
       drinks = False
   
