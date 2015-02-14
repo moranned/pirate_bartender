@@ -1,5 +1,7 @@
 import random
 
+ALL_CUSTOMERS = {}
+
 def get_preferences():
   '''
   ask customer a series of predefinied questions to determine drink ingredients
@@ -47,26 +49,41 @@ def name_drink():
   name = '%s %s' %(random.choice(adjectives),random.choice(nouns))
   return name
 
+def customer_management():
+  '''
+  greet customer and store name and number of drinks in global dictionary
+  @return boolean
+  '''
+  customers = {}
+  question = 'Would you like to order a drink? '
+  answer = raw_input(question)
+  if answer.lower() == 'yes' or answer.lower() == 'y':
+    customer_name = raw_input('What is your name, matey? ')
+    for customer, info in ALL_CUSTOMERS.iteritems():
+      if customer == customer_name:
+        update_customer = ALL_CUSTOMERS.get(customer_name)
+        update_customer["total drinks"] += 1
+        return customer_name
+    customers["name"] = customer_name
+    customers["total drinks"] = 1
+    ALL_CUSTOMERS[customer_name] = customers
+    return customer_name
+  else:
+    return None
+
 def main():
-  orders = 0
   drinks = True
   while drinks:
-    if orders == 0:
-      customer_name = raw_input('Ahoy matey, what is yer name? ')
-      question = 'Would you like to order a drink %s ? ' %customer_name
-      answer = raw_input(question)
-    elif orders > 0 and orders < 6:
-      question = 'Would you like to order another drink, %s ? ' %customer_name
-      answer = raw_input(question)
-    else:
-      print 'Youre cut off my friend. How about a glass of water?'
-      break
-    if answer.lower() == 'yes' or answer.lower() == 'y':
-      orders += 1
-      customer_order = make_drink(get_preferences())
-      print '\nYour drink is ready.\nIt is called The %s.\nIt has some good stuff:' %name_drink()
-      for i in customer_order:
-        print '> a %s ' %i
+    customer_name = customer_management()
+    if customer_name:
+      update_customer = ALL_CUSTOMERS.get(customer_name)
+      if update_customer.get("drink name"):
+        print 'Would you like another %s? ' %update_customer["drink name"]
+      else:
+        customer_order = make_drink(get_preferences())
+        update_customer["drink name"] = name_drink()
+        update_customer["ingredients"] = customer_order
+        print ALL_CUSTOMERS
     else:
       drinks = False
   
