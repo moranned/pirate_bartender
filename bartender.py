@@ -2,6 +2,13 @@ import random
 
 ALL_CUSTOMERS = {}
 ANSWERS = ['yes','y']
+INVENTORY = {
+    "glug of rum" : 10, "slug of whisky": 10, "splash of gin": 10,
+    "olive on a stick": 10, "salt-dusted rim": 10, "rasher of bacon": 10,
+    "shake of bitters": 10, "splash of tonic": 10, "twist of lemon peel": 10,
+    "sugar cube": 10, "spoonful of honey": 10, "spash of cola": 10,
+    "slice of orange": 10, "dash of cassis": 10, "cherry on top": 10
+  }
 
 def get_preferences():
   '''
@@ -42,7 +49,25 @@ def make_drink(prefs):
   for k,v in prefs.iteritems():
     if v is True:
       order_ingredients.append(random.choice(ingredients.get(k)))
+
+  manage_inventory(order_ingredients)
   return order_ingredients
+
+def manage_inventory(order_ingredients):
+  '''
+  @param list of ingredients
+  decrement ingredient stock
+  re-stock ingredients when supply runs low
+  :return None:
+  '''
+
+  for ingredient in INVENTORY.keys():
+    if ingredient in order_ingredients:
+      if INVENTORY[ingredient] < 2:
+        print 'Shiver me timbers, I need to restock %s!' %ingredient
+        INVENTORY[ingredient] = 10
+      else:
+        INVENTORY[ingredient] -= 1
 
 def name_drink():
   nouns = ["Dog", "Seagull", "Pirate", "Cannonball", "Scallywag", "Anchor", "Diamond", "Breeze", "Sunshine", "Paradise", "Cocktail"]
@@ -82,7 +107,7 @@ def deliver_drink(customer_info):
   drink_name = name_drink()
   customer_info["drink name"] = drink_name
   customer_info["ingredients"] = customer_order
-  print 'I made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
+  print '\nI made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
   for ingredients in customer_order:
     print 'A %s' %ingredients
 
@@ -96,7 +121,8 @@ def main():
         question = 'Would you like another %s ? ' %update_customer["drink name"]
         answer = raw_input(question)
         if answer.lower() in ANSWERS:
-          print 'One %s, coming right up!' %update_customer["drink name"]
+          print '\nOne %s, coming right up!' %update_customer["drink name"]
+          manage_inventory(update_customer["ingredients"])
         else:
           deliver_drink(update_customer)
       else:
