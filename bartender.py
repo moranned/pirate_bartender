@@ -9,6 +9,7 @@ INVENTORY = {
     "sugar cube": 10, "spoonful of honey": 10, "spash of cola": 10,
     "slice of orange": 10, "dash of cassis": 10, "cherry on top": 10
   }
+DRINK_LIMIT = 5
 
 def get_preferences():
   '''
@@ -105,24 +106,26 @@ def deliver_drink(customer_info,order_ingredients):
 def main():
   drinks = True
   while drinks:
-    print ALL_CUSTOMERS
-    print INVENTORY
     question = 'Would you like to order a drink? '
     answer = raw_input(question)
     if answer.lower() in ANSWERS:
       customer_name = customer_management()
       update_customer = ALL_CUSTOMERS.get(customer_name)
-      if update_customer.get("drink name"):
-        question = 'Would you like another %s ? ' %update_customer["drink name"]
-        answer = raw_input(question)
-        if answer.lower() in ANSWERS:
-          print '\nOne %s, coming right up!' %update_customer["drink name"]
-          manage_inventory(update_customer["ingredients"])
-          continue
-      customer_prefs = get_preferences()
-      order_ingredients = make_drink(customer_prefs)
-      manage_inventory(order_ingredients)
-      deliver_drink(update_customer,order_ingredients)
+      if update_customer['total drinks'] > DRINK_LIMIT:
+        print 'Youve had enough my friend. Have a glass of water?'
+        continue
+      else:
+        if update_customer.get("drink name"):
+          question = 'Would you like another %s ? ' %update_customer["drink name"]
+          answer = raw_input(question)
+          if answer.lower() in ANSWERS:
+            print '\nOne %s, coming right up!' %update_customer["drink name"]
+            manage_inventory(update_customer["ingredients"])
+            continue
+        customer_prefs = get_preferences()
+        order_ingredients = make_drink(customer_prefs)
+        manage_inventory(order_ingredients)
+        deliver_drink(update_customer,order_ingredients)
     else:
       drinks = False
   
