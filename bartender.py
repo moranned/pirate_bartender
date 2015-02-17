@@ -81,41 +81,38 @@ def customer_management():
   @return string of customers name
   '''
   customers = {}
-  question = 'Would you like to order a drink? '
-  answer = raw_input(question)
-  if answer.lower() in ANSWERS:
-    customer_name = raw_input('What is your name, matey? ')
-    for customer, info in ALL_CUSTOMERS.iteritems():
-      if customer == customer_name:
-        update_customer = ALL_CUSTOMERS.get(customer_name)
-        update_customer["total drinks"] += 1
-        return customer_name
-    customers["name"] = customer_name
-    customers["total drinks"] = 1
-    ALL_CUSTOMERS[customer_name] = customers
-    return customer_name
+  customer_name = raw_input('What is your name, matey? ')
+  if ALL_CUSTOMERS.has_key(customer_name):
+    ALL_CUSTOMERS[customer_name]['total drinks'] += 1
   else:
-    return None
+    ALL_CUSTOMERS[customer_name] = {
+      'name': customer_name,
+      'total drinks': 1
+    }
+  return customer_name
 
-def deliver_drink(customer_info):
+def deliver_drink(customer_info,order_ingredients):
   '''
   update customers drink preferences and deliver drink
   :param dictionary of customer_info:
   :return:
   '''
-  customer_order = make_drink(get_preferences())
   drink_name = name_drink()
   customer_info["drink name"] = drink_name
-  customer_info["ingredients"] = customer_order
+  customer_info["ingredients"] = order_ingredients
   print '\nI made you a tasty brew.\nIt is called the %s and has the following ingredients:' %drink_name
-  for ingredients in customer_order:
+  for ingredients in order_ingredients:
     print 'A %s' %ingredients
 
 def main():
   drinks = True
   while drinks:
-    customer_name = customer_management()
-    if customer_name:
+    print ALL_CUSTOMERS
+    print INVENTORY
+    question = 'Would you like to order a drink? '
+    answer = raw_input(question)
+    if answer.lower() in ANSWERS:
+      customer_name = customer_management()
       update_customer = ALL_CUSTOMERS.get(customer_name)
       if update_customer.get("drink name"):
         question = 'Would you like another %s ? ' %update_customer["drink name"]
@@ -123,10 +120,10 @@ def main():
         if answer.lower() in ANSWERS:
           print '\nOne %s, coming right up!' %update_customer["drink name"]
           manage_inventory(update_customer["ingredients"])
-        else:
-          deliver_drink(update_customer)
-      else:
-        deliver_drink(update_customer)
+          continue
+      customer_prefs = get_preferences()
+      order_ingredients = make_drink(customer_prefs)
+      deliver_drink(update_customer,order_ingredients)
     else:
       drinks = False
   
