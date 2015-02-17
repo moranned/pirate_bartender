@@ -10,6 +10,11 @@ INVENTORY = {
     "slice of orange": 10, "dash of cassis": 10, "cherry on top": 10
   }
 DRINK_LIMIT = 5
+PROMPTS = {
+  "drink" : "Would you like to order a drink? ",
+  "name" : "What is your name, matey? ",
+  "more" : "Would you like another "
+}
 
 def get_preferences():
   '''
@@ -59,14 +64,12 @@ def manage_inventory(order_ingredients):
   re-stock ingredients when supply runs low
   :return None:
   '''
-
-  for ingredient in INVENTORY.keys():
-    if ingredient in order_ingredients:
-      if INVENTORY[ingredient] < 2:
-        print 'Shiver me timbers, I need to restock %s!' %ingredient
-        INVENTORY[ingredient] = 10
-      else:
-        INVENTORY[ingredient] -= 1
+  for ingredient in order_ingredients:
+    if INVENTORY[ingredient] < 2:
+      print 'Shiver me timbers, I need to restock %s!' %ingredient
+      INVENTORY[ingredient] = 10
+    else:
+      INVENTORY[ingredient] -= 1
 
 def name_drink():
   nouns = ["Dog", "Seagull", "Pirate", "Cannonball", "Scallywag", "Anchor", "Diamond", "Breeze", "Sunshine", "Paradise", "Cocktail"]
@@ -74,13 +77,12 @@ def name_drink():
   name = '%s %s' %(random.choice(adjectives),random.choice(nouns))
   return name
 
-def customer_management():
+def customer_management(customer_name):
   '''
   greet customer and store name and number of drinks in global dictionary
   @return string of customers name
   '''
   customers = {}
-  customer_name = raw_input('What is your name, matey? ')
   if ALL_CUSTOMERS.has_key(customer_name):
     ALL_CUSTOMERS[customer_name]['total drinks'] += 1
   else:
@@ -103,31 +105,37 @@ def deliver_drink(customer_info,order_ingredients):
   for ingredients in order_ingredients:
     print 'A %s' %ingredients
 
-def main():
-  drinks = True
-  while drinks:
-    question = 'Would you like to order a drink? '
+def prompt_user(question,drink):
+  if question == PROMPTS["more"]:
+    question = question + drink + '? '
     answer = raw_input(question)
+  else:
+    answer = raw_input(question)
+  return answer
+
+def main():
+  while True:
+    answer = prompt_user(PROMPTS['drink'],ALL_CUSTOMERS)
     if answer.lower() in ANSWERS:
-      customer_name = customer_management()
-      update_customer = ALL_CUSTOMERS.get(customer_name)
-      if update_customer['total drinks'] > DRINK_LIMIT:
-        print 'Youve had enough my friend. Have a glass of water?'
+      customer_name = raw_input(PROMPTS['name'])
+      customer_management(customer_name)
+      if ALL_CUSTOMERS[customer_name]['total drinks'] > DRINK_LIMIT:
+        print 'Youve had enough my friend. Have a glass of water.'
         continue
       else:
-        if update_customer.get("drink name"):
-          question = 'Would you like another %s ? ' %update_customer["drink name"]
-          answer = raw_input(question)
+        if ALL_CUSTOMERS[customer_name].has_key('drink name'):
+
+          answer = prompt_user(PROMPTS['more'],ALL_CUSTOMERS[customer_name]["drink name"])
           if answer.lower() in ANSWERS:
-            print '\nOne %s, coming right up!' %update_customer["drink name"]
-            manage_inventory(update_customer["ingredients"])
+            print '\nOne %s, coming right up!' %ALL_CUSTOMERS[customer_name]["drink name"]
+            manage_inventory(ALL_CUSTOMERS[customer_name]["ingredients"])
             continue
         customer_prefs = get_preferences()
         order_ingredients = make_drink(customer_prefs)
         manage_inventory(order_ingredients)
-        deliver_drink(update_customer,order_ingredients)
+        deliver_drink(ALL_CUSTOMERS[customer_name],order_ingredients)
     else:
-      drinks = False
+      break
   
 if __name__ == '__main__':
   main()
