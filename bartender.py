@@ -49,8 +49,6 @@ def make_drink(prefs):
   for k,v in prefs.iteritems():
     if v is True:
       order_ingredients.append(random.choice(ingredients.get(k)))
-
-  manage_inventory(order_ingredients)
   return order_ingredients
 
 def manage_inventory(order_ingredients):
@@ -123,6 +121,7 @@ def main():
           continue
       customer_prefs = get_preferences()
       order_ingredients = make_drink(customer_prefs)
+      manage_inventory(order_ingredients)
       deliver_drink(update_customer,order_ingredients)
     else:
       drinks = False
