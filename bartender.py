@@ -108,9 +108,9 @@ def deliver_drink(customer_info,order_ingredients):
 def prompt_user(question,drink):
   if question == PROMPTS["more"]:
     question = question + drink + '? '
-    answer = raw_input(question)
   else:
-    answer = raw_input(question)
+    question = question
+  answer = raw_input(question)
   return answer
 
 def main():
@@ -124,7 +124,6 @@ def main():
         continue
       else:
         if ALL_CUSTOMERS[customer_name].has_key('drink name'):
-
           answer = prompt_user(PROMPTS['more'],ALL_CUSTOMERS[customer_name]["drink name"])
           if answer.lower() in ANSWERS:
             print '\nOne %s, coming right up!' %ALL_CUSTOMERS[customer_name]["drink name"]
