@@ -90,7 +90,7 @@ def customer_management(customer_name):
       'name': customer_name,
       'total drinks': 1
     }
-  return customer_name
+  return
 
 def deliver_drink(customer_info,order_ingredients):
   '''
